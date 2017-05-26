@@ -4,6 +4,8 @@ import com.fosun.fin.data.entity.SysApiRespParm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Created by pengyk on 17-5-22.
  */
@@ -16,6 +18,6 @@ public interface SysApiRespParmDao {
 
     void update(@Param("response") SysApiRespParm response);
 
-    SysApiRespParm query(@Param("response") SysApiRespParm response);
+    List<SysApiRespParm> query(@Param("response") SysApiRespParm response);
 
 }
