@@ -4,6 +4,8 @@ import com.fosun.fin.data.entity.DataApiReqParm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Created by pengyk on 17-5-22.
  */
@@ -17,5 +19,7 @@ public interface DataApiReqDao {
     void update(@Param("request") DataApiReqParm request);
 
     DataApiReqParm query(@Param("request") DataApiReqParm request);
+
+    List<String> queryByApiCd(@Param("apiCd") String apiCd);
 
 }

@@ -1,6 +1,8 @@
 package com.fosun.fin.data.service.internal.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fosun.fin.data.service.internal.IInternalService;
+import com.fosun.fin.data.util.common.JsonResult;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,7 +29,8 @@ public class InternalServiceImpl implements IInternalService {
      * @param request
      */
     @Override
-    public void query(String request) throws IOException {
-
+    public JsonResult query(JSONObject request) throws IOException {
+        JsonResult jsonResult = null;
+        return jsonResult;
     }
 }

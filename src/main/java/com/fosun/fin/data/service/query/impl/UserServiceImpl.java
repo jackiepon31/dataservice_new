@@ -1,6 +1,5 @@
 package com.fosun.fin.data.service.query.impl;
 
-import com.fosun.fin.data.dao.UserDao;
 import com.fosun.fin.data.entity_bak.User;
 import com.fosun.fin.data.service.query.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;

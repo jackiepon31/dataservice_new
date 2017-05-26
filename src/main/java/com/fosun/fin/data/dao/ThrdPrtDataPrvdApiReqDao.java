@@ -4,6 +4,8 @@ import com.fosun.fin.data.entity.ThrdPrtDataPrvdApiReqParm;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Created by pengyk on 17-5-22.
  */
@@ -18,4 +20,5 @@ public interface ThrdPrtDataPrvdApiReqDao {
 
     ThrdPrtDataPrvdApiReqParm query(@Param("request") ThrdPrtDataPrvdApiReqParm request);
 
+    List<String> queryByApiCd(@Param("apiCd") String apiCd);
 }

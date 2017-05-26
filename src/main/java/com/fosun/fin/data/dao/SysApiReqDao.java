@@ -20,4 +20,5 @@ public interface SysApiReqDao {
 
     List<SysApiReqParm> query(@Param("request") SysApiReqParm request);
 
+    List<String> queryByApiCd(@Param("apiCd") String apiCd);
 }

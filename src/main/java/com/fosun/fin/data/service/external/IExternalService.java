@@ -1,5 +1,7 @@
 package com.fosun.fin.data.service.external;
 
+import com.alibaba.fastjson.JSONObject;
+import com.fosun.fin.data.util.common.JsonResult;
 import org.apache.http.HttpEntity;
 import org.elasticsearch.client.Response;
 
@@ -25,7 +27,7 @@ public interface IExternalService {
      * 外部接口数据查询
      * @param request
      */
-    public void query(String request) throws IOException;
+    public JsonResult query(JSONObject request) throws IOException;
 
 
 

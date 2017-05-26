@@ -1,5 +1,8 @@
 package com.fosun.fin.data.service.internal;
 
+import com.alibaba.fastjson.JSONObject;
+import com.fosun.fin.data.dto.RequestParamDTO;
+import com.fosun.fin.data.util.common.JsonResult;
 import org.apache.http.HttpEntity;
 import org.elasticsearch.client.Response;
 
@@ -11,7 +14,7 @@ import java.io.IOException;
 public interface IInternalService {
 
     /**
-     * 外部接口服务信息校验
+     * 内部接口服务信息校验
      * @param index
      * @param type
      * @return bool
@@ -20,9 +23,9 @@ public interface IInternalService {
 
 
     /**
-     * 外部接口数据查询
+     * 内部接口数据查询
      * @param request
      */
-    public void query(String request) throws IOException;
+    public JsonResult query(JSONObject request) throws IOException;
 
 }

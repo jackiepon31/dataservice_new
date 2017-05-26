@@ -1,6 +1,8 @@
 package com.fosun.fin.data.service.external.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fosun.fin.data.service.external.IExternalService;
+import com.fosun.fin.data.util.common.JsonResult;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -28,7 +30,8 @@ public class ExternalServiceImpl implements IExternalService {
      * @param request
      */
     @Override
-    public void query(String request) throws IOException {
-
+    public JsonResult query(JSONObject request) throws IOException {
+        JsonResult jsonResult = null;
+        return jsonResult;
     }
 }

@@ -1,13 +1,18 @@
 package com.fosun.fin.data.service.query.impl;
 
-import com.fosun.fin.data.dto.RequestParamDTO;
+import com.alibaba.druid.util.StringUtils;
+import com.alibaba.fastjson.JSONObject;
+import com.fosun.fin.data.constant.SystemConstant;
+import com.fosun.fin.data.service.common.IValidateService;
 import com.fosun.fin.data.service.external.IExternalService;
 import com.fosun.fin.data.service.internal.IInternalService;
 import com.fosun.fin.data.service.query.IQueryService;
+import com.fosun.fin.data.util.common.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by pengyk on 2017/5/22.
@@ -19,29 +24,31 @@ public class QueryServiceImpl implements IQueryService {
     private IExternalService externalService;
     @Autowired
     private IInternalService internalService;
-
+    @Autowired
+    private IValidateService validateService;
     /**
      * 查询数据
      *
-     * @param requestParamDTO
-     * @return String
+     * @param requestParam
+     * @return JsonResult
      */
     @Override
-    public String queryData(RequestParamDTO requestParamDTO) throws IOException {
-        /**
-         * 先调用内部服务接口,如果有数据，直接返回客户端，
-         * 如果内部服务接口没有，则调用外部服务接口，查
-         * 询成功，外部服务接口返回数据给客户端，另外异
-         * 步存入ES中
-         *
-         *
-         * */
-        //先对参数类型做校验
-        return null;
+    public JsonResult queryData(JSONObject requestParam) throws Exception {
+        //校验
+        JsonResult jsonResult = null;
+        Map map = new HashMap();
+        //系统配置&参数可用性校验
+        String message = validateService.validate(SystemConstant.ApiType.SYSTEM_API.getValue(),requestParam);
+        if(StringUtils.isEmpty(message)){
+            //校验通过，开始访问接口
+
+        }else {
+            //返回报错信息
+            jsonResult = new JsonResult(JsonResult.JSON_RESULT_TYPE.failure,message,map);
+        }
+
+        return jsonResult;
     }
 
-    private Boolean validateParam(RequestParamDTO requestParamDTO) throws Exception{
-        Boolean flag = false;
-        return flag;
-    }
+
 }
