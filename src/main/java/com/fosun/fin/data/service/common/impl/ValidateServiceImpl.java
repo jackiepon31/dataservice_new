@@ -2,9 +2,8 @@ package com.fosun.fin.data.service.common.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fosun.fin.data.constant.SystemConstant;
-import com.fosun.fin.data.dao.DataApiReqDao;
-import com.fosun.fin.data.dao.SysApiReqDao;
-import com.fosun.fin.data.dao.ThrdPrtDataPrvdApiReqDao;
+import com.fosun.fin.data.dao.*;
+import com.fosun.fin.data.entity.*;
 import com.fosun.fin.data.service.common.IValidateService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +19,30 @@ import java.util.List;
 public class ValidateServiceImpl implements IValidateService {
 
     @Autowired
+    private BusSysInfoDao busSysInfoDao;
+
+    @Autowired
+    private SysApiSrvcSysDao sysApiSrvcSysDao;
+
+    @Autowired
+    private SysApiInfoDao sysApiInfoDao;
+
+    @Autowired
     private SysApiReqDao sysApiReqDao;
 
     @Autowired
-    private DataApiReqDao dataApiReqDao;
+    private ThrdPrtDataPrvdInfoDao thrdPrtDataPrvdInfoDao;
+
+    @Autowired
+    private ThrdPrtDataPrvdApiInfoDao thrdPrtDataPrvdApiInfoDao;
 
     @Autowired
     private ThrdPrtDataPrvdApiReqDao thrdPrtDataPrvdApiReqDao;
+
+    @Autowired
+    private DataApiInfoDao dataApiInfoDao;
+    @Autowired
+    private DataApiReqDao dataApiReqDao;
 
     /**
      * 校验入口
@@ -37,11 +53,39 @@ public class ValidateServiceImpl implements IValidateService {
      */
     @Override
     public String validate(String validateType, JSONObject requestParam) throws Exception {
-        //先校验参数的可用性
-        String validateMsg = validateParam(validateType,requestParam);
+        //校验业务系统的可用性
+        String validateMsg = validateSystem(requestParam);
+        //校验参数的可用性
         if(StringUtils.isEmpty(validateMsg)){
-            //再校验Api服务元的可用性
+            validateMsg = validateParam(validateType,requestParam);
+        }else if(StringUtils.isEmpty(validateMsg)){
+            //再校验Api服务的可用性
             validateMsg = validateApi(validateType,requestParam);
+        }
+        return validateMsg;
+    }
+
+    /**
+     * API可用性信息校验
+     *
+     * @param requestParam
+     * @return String
+     */
+    public String validateSystem(JSONObject requestParam){
+        String validateMsg = "";
+        String systemName = requestParam.getString(SystemConstant.KeyName.BUS_SYS_NM.getValue());
+        if (StringUtils.isEmpty(systemName)){
+            validateMsg = "systemName"+SystemConstant.ValidateMsg.MSG_NULL_ERROR.getValue();
+        }else{
+            BusSysInfo busSysInfo = busSysInfoDao.queryByName(systemName);
+            if(busSysInfo == null){
+                validateMsg = SystemConstant.ValidateMsg.MSG_SYSTEM_ERROR.getValue();
+            }else{
+                String useFlag = Byte.toString(busSysInfo.getBusSysOnUseFlg());
+                if(SystemConstant.UseFlag.UN_USEABLE.equals(useFlag)){
+                    validateMsg = SystemConstant.ValidateMsg.MSG_SYSTEM_ERROR.getValue();
+                }
+            }
         }
         return validateMsg;
     }
@@ -58,7 +102,7 @@ public class ValidateServiceImpl implements IValidateService {
         String apiCd = this.getApiCode(validateType,requestParam);
         if(StringUtils.isEmpty(apiCd)){
             //apiCd不能非空
-            validateMsg = SystemConstant.ValidateMsg.MSG_NULL_ERROR.getValue();
+            validateMsg = ""+SystemConstant.ValidateMsg.MSG_NULL_ERROR.getValue();
         }else{
             List<String> reqKeyList = new<String> ArrayList(requestParam.keySet());
             List<String> apiKeyList = this.getReqKeyList(validateType,apiCd);
@@ -74,6 +118,54 @@ public class ValidateServiceImpl implements IValidateService {
                         break;
                     }
                 }
+            }
+        }
+        return validateMsg;
+    }
+
+    /**
+     * 校验接口服务可用性
+     *
+     * @param validateType
+     * @param requestParam
+     * @return String
+     */
+    private String validateApi(String validateType, JSONObject requestParam) throws Exception {
+        String validateMsg = "";
+        String apiCode = this.getApiCode(validateType,requestParam);
+        if(SystemConstant.ApiType.SYSTEM_API.getValue().equals(validateType)){
+            SysApiSrvcSys sysApiSrvcSys = sysApiSrvcSysDao.queryByCode(apiCode);
+            SysApiInfo sysApiInfo = sysApiInfoDao.queryByCode(apiCode);
+            if(sysApiSrvcSys!=null && sysApiInfo!=null){
+                String srvcFlag = Byte.toString(sysApiSrvcSys.getSysApiSrvcSysOnUseFlg());
+                String apiFlag = Byte.toString(sysApiInfo.getSysApiOnUseFlg());
+                if(SystemConstant.UseFlag.UN_USEABLE.getValue().equals(srvcFlag)||SystemConstant.UseFlag.UN_USEABLE.getValue().equals(apiFlag)){
+                    validateMsg = SystemConstant.ValidateMsg.MSG_API_ERROR.getValue();
+                }
+            }else{
+                validateMsg = SystemConstant.ValidateMsg.MSG_API_ERROR.getValue();
+            }
+        }else if(SystemConstant.ApiType.INTERNAL_API.getValue().equals(validateType)){
+            DataApiInfo dataApiInfo = dataApiInfoDao.queryByCode(apiCode);
+            if(dataApiInfo!=null){
+                String apiFlag = Byte.toString(dataApiInfo.getDataApiOnUseFlg());
+                if(SystemConstant.UseFlag.UN_USEABLE.getValue().equals(apiFlag)){
+                    validateMsg = SystemConstant.ValidateMsg.MSG_API_ERROR.getValue();
+                }
+            }else{
+                validateMsg = SystemConstant.ValidateMsg.MSG_API_ERROR.getValue();
+            }
+        }else if(SystemConstant.ApiType.EXTERNAL_API.getValue().equals(validateType)){
+            ThrdPrtDataPrvdInfo thrdPrtDataPrvdInfo = thrdPrtDataPrvdInfoDao.queryByCode(apiCode);
+            ThrdPrtDataPrvdApiInfo thrdPrtDataPrvdApiInfo = thrdPrtDataPrvdApiInfoDao.queryByCode(apiCode);
+            if(thrdPrtDataPrvdInfo!=null && thrdPrtDataPrvdApiInfo!=null){
+                String srvcFlag = Byte.toString(thrdPrtDataPrvdInfo.getThrdPrtDataPrvdOnUseFlg());
+                String apiFlag = Byte.toString(thrdPrtDataPrvdApiInfo.getThrdPrtDataPrvdApiOnUseFlg());
+                if(SystemConstant.UseFlag.UN_USEABLE.getValue().equals(srvcFlag)||SystemConstant.UseFlag.UN_USEABLE.getValue().equals(apiFlag)){
+                    validateMsg = SystemConstant.ValidateMsg.MSG_API_ERROR.getValue();
+                }
+            }else{
+                validateMsg = SystemConstant.ValidateMsg.MSG_API_ERROR.getValue();
             }
         }
         return validateMsg;
@@ -105,16 +197,5 @@ public class ValidateServiceImpl implements IValidateService {
         return reqKeyList;
     }
 
-    /**
-     * 校验接口服务可用性
-     *
-     * @param validateType
-     * @param requestParam
-     * @return String
-     */
-    private String validateApi(String validateType, JSONObject requestParam) throws Exception {
-        String validateMsg = "";
 
-        return validateMsg;
-    }
 }

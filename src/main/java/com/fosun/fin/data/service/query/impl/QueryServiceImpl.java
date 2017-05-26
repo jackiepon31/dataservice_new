@@ -41,7 +41,7 @@ public class QueryServiceImpl implements IQueryService {
         String message = validateService.validate(SystemConstant.ApiType.SYSTEM_API.getValue(),requestParam);
         if(StringUtils.isEmpty(message)){
             //校验通过，开始访问接口
-
+            internalService.query(requestParam);
         }else {
             //返回报错信息
             jsonResult = new JsonResult(JsonResult.JSON_RESULT_TYPE.failure,message,map);

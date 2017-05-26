@@ -15,4 +15,5 @@ public interface IValidateService {
      */
     public String validate(String validateType,JSONObject requestParam) throws Exception;
 
+
 }

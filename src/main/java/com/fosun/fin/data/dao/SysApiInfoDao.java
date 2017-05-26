@@ -18,4 +18,6 @@ public interface SysApiInfoDao {
 
     SysApiInfo query(@Param("sysInterface") SysApiInfo sysApiInfo);
 
+    SysApiInfo queryByCode(@Param("apiCode") String apiCode);
+
 }

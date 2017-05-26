@@ -18,4 +18,5 @@ public interface ThrdPrtDataPrvdApiInfoDao {
 
     ThrdPrtDataPrvdApiInfo query(@Param("cluster") ThrdPrtDataPrvdApiInfo tpInterface);
 
+    ThrdPrtDataPrvdApiInfo queryByCode(@Param("apiCode") String apiCode);
 }

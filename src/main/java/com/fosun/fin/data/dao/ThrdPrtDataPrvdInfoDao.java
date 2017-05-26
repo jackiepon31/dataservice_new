@@ -18,4 +18,5 @@ public interface ThrdPrtDataPrvdInfoDao {
 
     ThrdPrtDataPrvdInfo query(@Param("provider") ThrdPrtDataPrvdInfo provider);
 
+    ThrdPrtDataPrvdInfo queryByCode(@Param("apiCode") String apiCode);
 }

@@ -14,8 +14,10 @@ public interface BusSysInfoDao {
 
     void delete(String name);
 
-    void update(@Param("dataApiInfo") BusSysInfo busSysInfo);
+    void update(@Param("busSysInfo") BusSysInfo busSysInfo);
 
-    BusSysInfo query(@Param("dataApiInfo") BusSysInfo busSysInfo);
+    BusSysInfo query(@Param("busSysInfo") BusSysInfo busSysInfo);
+
+    BusSysInfo queryByName(@Param("busSysNm") String busSysNm);
 
 }

@@ -18,4 +18,6 @@ public interface DataApiInfoDao {
 
     DataApiInfo query(@Param("dataApiInfo") DataApiInfo dataApiInfo);
 
+    DataApiInfo queryByCode(@Param("apiCode") String apiCode);
+
 }
