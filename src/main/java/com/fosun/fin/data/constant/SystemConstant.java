@@ -45,15 +45,15 @@ public class SystemConstant {
     // 参数类型
     public static enum KeyName {
         // 系统平台服务接口编码
-        SYSTEM_API_CD("systemApiCd","系统平台服务接口编码"),
+        SYSTEM_API_CD("系统平台服务接口编码","systemApiCd"),
         // 内部数据服务接口
-        DATA_API_CD("dataApiCd","内部数据服务接口编码"),
+        DATA_API_CD("内部数据服务接口编码","dataApiCd"),
         // 外部数据服务接口
-        THRD_PRT_DATA_PRVD_API_CD("thrdPrtDataPrvdApiCd","外部数据服务接口编码"),
+        THRD_PRT_DATA_PRVD_API_CD("外部数据服务接口编码","thrdPrtDataPrvdApiCd"),
         // 接口参数
-        PRAM_MAP("pramMap","数据服务接口参数"),
+        PRAM_MAP("数据服务接口参数","pramMap"),
         // 业务系统名称
-        BUS_SYS_NM("busSysNm","业务系统名称");
+        BUS_SYS_NM("业务系统名称","busSysNm");
         private String name;
         private String value;
         private KeyName(String name, String value) {

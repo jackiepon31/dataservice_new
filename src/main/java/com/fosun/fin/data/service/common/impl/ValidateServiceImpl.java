@@ -104,8 +104,8 @@ public class ValidateServiceImpl implements IValidateService {
             //apiCd不能非空
             validateMsg = ""+SystemConstant.ValidateMsg.MSG_NULL_ERROR.getValue();
         }else{
-            List<String> reqKeyList = new<String> ArrayList(requestParam.keySet());
-            List<String> apiKeyList = this.getReqKeyList(validateType,apiCd);
+            List<String> reqKeyList = this.getReqKeyList(validateType,requestParam);
+            List<String> apiKeyList = this.getApiKeyList(validateType,apiCd);
             if(reqKeyList.size()!=apiKeyList.size()){
                 //参数个数有误
                 validateMsg = SystemConstant.ValidateMsg.MSG_COUNT_ERROR.getValue();
@@ -184,8 +184,21 @@ public class ValidateServiceImpl implements IValidateService {
         return apiCd;
     }
 
-    /*获取请求参数元数据列表*/
-    private List<String> getReqKeyList(String validateType, String apiCd){
+    /*获取请求参数信息*/
+    private List<String> getReqKeyList(String validateType,JSONObject requestParam){
+        List<String> reqKeyList = new ArrayList<String>();
+        if(SystemConstant.ApiType.SYSTEM_API.getValue().equals(validateType)){
+            reqKeyList = new ArrayList<String>(requestParam.keySet());
+        }else if(SystemConstant.ApiType.INTERNAL_API.getValue().equals(validateType)
+                || SystemConstant.ApiType.INTERNAL_API.getValue().equals(validateType)){
+            JSONObject paramJson = requestParam.getJSONObject(SystemConstant.KeyName.PRAM_MAP.getValue());
+            reqKeyList = new ArrayList<String>(paramJson.keySet());
+        }
+        return reqKeyList;
+    }
+
+    /*获取请求参数对应的配置信息*/
+    private List<String> getApiKeyList(String validateType, String apiCd){
         List<String> reqKeyList = new ArrayList<String>();
         if(SystemConstant.ApiType.SYSTEM_API.getValue().equals(validateType)){
             reqKeyList = dataApiReqDao.queryByApiCd(apiCd);
@@ -196,6 +209,7 @@ public class ValidateServiceImpl implements IValidateService {
         }
         return reqKeyList;
     }
+
 
 
 }
